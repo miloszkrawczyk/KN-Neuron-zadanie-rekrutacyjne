@@ -1,0 +1,36 @@
+[project]
+name = "adhd-eeg-classifier"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "kagglehub>=1.0.3",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.4",
+    "pandas>=3.1.0",
+    "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
+    "torch>=2.15.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+    "ruff>=0.17.3",
+]
+
+[tool.pytest.ini_options]
+# Lets the tests import src.* without installing the project as a package.
+pythonpath = ["."]
+
+[tool.ruff]
+# The default 88 wraps signatures with two or three keyword arguments onto
+# several lines. 100 still fits side by side with a second file open.
+line-length = 100
+
+[tool.ruff.lint]
+# E, F: the defaults. Style errors, unused imports, undefined names.
+# I: import order, so it is never a matter of taste.
+# B: bugbear. Catches likely bugs ruff's defaults let through, such as a
+#   mutable default argument shared between calls.
+# UP: modern syntax for the Python version in requires-python.
+select = ["E", "F", "I", "B", "UP"]

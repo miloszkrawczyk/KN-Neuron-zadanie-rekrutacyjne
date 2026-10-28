@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtual environment, rebuilt by uv sync
+.venv/
+
+# uv.lock is committed on purpose, so that the exact versions are reproducible
+
+# The EEG dataset and anything derived from it. Too big for git, and
+# scripts/download_data.py fetches it again from Kaggle.
+data/
+
+# Trained weights. Reproducible by running the training.
+*.pth
+
+# Kaggle API token. A private key to my account, never committed.
+kaggle.json
+
+# My own working notes, not part of the project
+notes/
+
+# Local Claude Code permissions, specific to my machine
+.claude/settings.local.json
+
+# Testing and linting caches
+.pytest_cache/
+.ruff_cache/
+
+# macOS
+.DS_Store
