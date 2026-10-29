@@ -78,6 +78,28 @@ CLASS_LABELS: dict = {"Control": 0, "ADHD": 1}
 TARGET_COLUMN: str = "label"
 
 
+# *** Frequency bands ***
+# The four classic EEG bands in Hz, as used across the ADHD literature. Each
+# band includes its lower edge and excludes its upper one, so 8 Hz counts as
+# alpha only and no frequency is counted twice.
+BANDS: dict = {
+    "delta": (0.5, 4),
+    "theta": (4, 8),
+    "alpha": (8, 13),
+    "beta": (13, 30),
+}
+
+# Length of the pieces Welch's method averages over. 4 s is 512 samples,
+# which spaces the spectrum 0.25 Hz apart: 16 points across theta, the
+# narrowest band. Longer pieces would sharpen that but leave fewer to average,
+# and the spectrum would get noisier.
+WELCH_SECONDS: int = 4
+
+# Relative power is a band's share of the power in this range. The upper edge
+# stops below the 50 Hz mains line, which is stronger in one group.
+TOTAL_POWER_RANGE: tuple = (0.5, 40)
+
+
 # *** Reproducibility ***
 # One seed for numpy, scikit-learn and PyTorch. Without it every run would
 # draw a different split and different starting weights, and two results

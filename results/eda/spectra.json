@@ -1,0 +1,152 @@
+{
+  "note": "Descriptive only. With 61 and 60 subjects an uninformative feature still lands around 0.5 +/- 0.05, and among 171 features a few will stray further by chance.",
+  "theta_beta_same_for_absolute_and_relative": true,
+  "focus_channels": {
+    "Fz": {
+      "delta abs": {
+        "auc": 0.411,
+        "median_adhd": 4.162,
+        "median_control": 4.286
+      },
+      "delta rel": {
+        "auc": 0.325,
+        "median_adhd": 0.591,
+        "median_control": 0.699
+      },
+      "theta abs": {
+        "auc": 0.561,
+        "median_adhd": 3.775,
+        "median_control": 3.696
+      },
+      "theta rel": {
+        "auc": 0.665,
+        "median_adhd": 0.226,
+        "median_control": 0.178
+      },
+      "alpha abs": {
+        "auc": 0.611,
+        "median_adhd": 3.385,
+        "median_control": 3.276
+      },
+      "alpha rel": {
+        "auc": 0.659,
+        "median_adhd": 0.087,
+        "median_control": 0.069
+      },
+      "beta abs": {
+        "auc": 0.613,
+        "median_adhd": 3.263,
+        "median_control": 3.17
+      },
+      "beta rel": {
+        "auc": 0.661,
+        "median_adhd": 0.064,
+        "median_control": 0.046
+      },
+      "theta/beta": {
+        "auc": 0.392,
+        "median_adhd": 3.399,
+        "median_control": 4.179
+      }
+    },
+    "Cz": {
+      "delta abs": {
+        "auc": 0.438,
+        "median_adhd": 4.032,
+        "median_control": 4.097
+      },
+      "delta rel": {
+        "auc": 0.361,
+        "median_adhd": 0.553,
+        "median_control": 0.648
+      },
+      "theta abs": {
+        "auc": 0.581,
+        "median_adhd": 3.694,
+        "median_control": 3.608
+      },
+      "theta rel": {
+        "auc": 0.593,
+        "median_adhd": 0.212,
+        "median_control": 0.18
+      },
+      "alpha abs": {
+        "auc": 0.648,
+        "median_adhd": 3.407,
+        "median_control": 3.254
+      },
+      "alpha rel": {
+        "auc": 0.639,
+        "median_adhd": 0.119,
+        "median_control": 0.074
+      },
+      "beta abs": {
+        "auc": 0.625,
+        "median_adhd": 3.169,
+        "median_control": 3.073
+      },
+      "beta rel": {
+        "auc": 0.611,
+        "median_adhd": 0.066,
+        "median_control": 0.05
+      },
+      "theta/beta": {
+        "auc": 0.429,
+        "median_adhd": 3.519,
+        "median_control": 3.604
+      }
+    }
+  },
+  "furthest_from_chance": [
+    {
+      "feature": "delta rel",
+      "channel": "Pz",
+      "auc": 0.298
+    },
+    {
+      "feature": "beta rel",
+      "channel": "Pz",
+      "auc": 0.695
+    },
+    {
+      "feature": "alpha rel",
+      "channel": "O1",
+      "auc": 0.695
+    },
+    {
+      "feature": "theta rel",
+      "channel": "Pz",
+      "auc": 0.694
+    },
+    {
+      "feature": "delta abs",
+      "channel": "P7",
+      "auc": 0.306
+    },
+    {
+      "feature": "delta abs",
+      "channel": "Pz",
+      "auc": 0.309
+    },
+    {
+      "feature": "delta rel",
+      "channel": "P3",
+      "auc": 0.311
+    },
+    {
+      "feature": "alpha rel",
+      "channel": "Pz",
+      "auc": 0.686
+    },
+    {
+      "feature": "alpha rel",
+      "channel": "P3",
+      "auc": 0.683
+    },
+    {
+      "feature": "delta rel",
+      "channel": "O1",
+      "auc": 0.319
+    }
+  ]
+}
