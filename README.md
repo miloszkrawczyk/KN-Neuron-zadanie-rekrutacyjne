@@ -1,16 +1,20 @@
 # adhd-eeg-classifier
 
-A binary classifier that tells children with ADHD apart from a control group
-using their EEG recordings, built on the Kaggle dataset
-`danizo/eeg-dataset-for-adhd`. Recruitment task for the AI section of the
-KN Neuron student research group at Wrocław University of Science and
-Technology.
+Binarny klasyfikator, który na podstawie nagrań EEG odróżnia dzieci z ADHD
+od grupy kontrolnej. Dane pochodzą ze zbioru Kaggle
+`danizo/eeg-dataset-for-adhd`. Projekt powstał jako zadanie rekrutacyjne do
+sekcji AI koła naukowego KN Neuron na Politechnice Wrocławskiej.
 
-Work in progress. Results, decisions and limitations get written up here once
-there are numbers to back them.
+Projekt jest w trakcie pracy. Wyniki, decyzje i ograniczenia opiszę tu, kiedy
+będą liczby, które je potwierdzą.
 
-## Running it
+## Uruchomienie
 
 ```bash
 uv sync
+uv run python -m scripts.download_data
 ```
+
+Skrypt pobiera z Kaggle archiwum (47 MB) i rozpakowuje plik `adhdata.csv`
+(267 MB) do `data/raw/`.
+Jeśli w `~/.kaggle/kaggle.json` jest token API Kaggle, `kagglehub` go użyje.
