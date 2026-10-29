@@ -68,6 +68,10 @@ LABEL_COLUMN: str = "Class"
 # PyTorch's pos_weight applies to them.
 CLASS_LABELS: dict = {"Control": 0, "ADHD": 1}
 
+# The 0/1 version of LABEL_COLUMN, added on loading. A separate column, so
+# the text from the file stays as it was and the two can be compared.
+TARGET_COLUMN: str = "label"
+
 
 # *** Reproducibility ***
 # One seed for numpy, scikit-learn and PyTorch. Without it every run would
