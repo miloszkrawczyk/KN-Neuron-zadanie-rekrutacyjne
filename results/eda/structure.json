@@ -1,0 +1,45 @@
+{
+  "rows": 2166383,
+  "subjects": 121,
+  "subjects_per_class": {
+    "ADHD": 61,
+    "Control": 60
+  },
+  "recording_seconds": {
+    "Control": {
+      "mean": 124.9,
+      "median": 122.1,
+      "std": 29.9,
+      "min": 62.4,
+      "max": 203.0,
+      "total": 7494.6
+    },
+    "ADHD": {
+      "mean": 154.6,
+      "median": 143.7,
+      "std": 58.1,
+      "min": 72.5,
+      "max": 337.9,
+      "total": 9430.2
+    }
+  },
+  "adhd_share_of_samples": 0.557,
+  "duplicated_rows": 45,
+  "amplitude": {
+    "min": -13237.0,
+    "max": 13813.0,
+    "mean_subject_median": 135.2,
+    "share_of_samples_beyond": {
+      "Control": {
+        "500": 0.0428,
+        "1000": 0.00949,
+        "2000": 0.00151
+      },
+      "ADHD": {
+        "500": 0.02066,
+        "1000": 0.0041,
+        "2000": 0.00056
+      }
+    }
+  }
+}

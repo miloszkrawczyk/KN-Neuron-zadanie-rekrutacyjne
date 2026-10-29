@@ -19,6 +19,11 @@ DATA_DIR: Path = PROJECT_ROOT / "data"
 RAW_DIR: Path = DATA_DIR / "raw"
 RAW_CSV: Path = RAW_DIR / "adhdata.csv"
 
+# Numbers and plots that go into the repository, unlike data/. Every figure
+# quoted in the README has to be traceable to a file in here.
+RESULTS_DIR: Path = PROJECT_ROOT / "results"
+EDA_DIR: Path = RESULTS_DIR / "eda"
+
 # *** Kaggle ***
 # A CSV conversion of the recordings published by Nasrabadi et al. on IEEE
 # DataPort (doi:10.21227/rzfh-zn36).
