@@ -137,6 +137,15 @@ TRIM_SECONDS: int = 2
 ARTIFACT_FACTOR: float = 3.0
 
 
+# *** Features ***
+# Welch piece length inside each 4 s window: three half-overlapping 2 s
+# pieces, averaged. Measured on log theta at Cz, that cuts the spread between
+# windows of the same subject from 0.207 to 0.180 while the spread between
+# subjects stays at 0.31. The cost is 0.5 Hz resolution, still 8 points
+# across theta.
+FEATURE_WELCH_SECONDS: int = 2
+
+
 # *** Splitting ***
 # Share of subjects held out for the final test: 25 of 121 (13 ADHD, 12
 # control), leaving 96 to train and cross-validate on. One subject in a test
