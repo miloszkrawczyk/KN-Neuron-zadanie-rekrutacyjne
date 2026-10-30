@@ -1,14 +1,16 @@
 {
   "config": {
+    "window_seconds": 4,
+    "dropout": 0.0,
+    "learning_rate": 0.001,
+    "windows": 5981,
     "device": "mps",
     "model": "EEGCNN(\n  (blocks): Sequential(\n    (0): Sequential(\n      (0): Conv1d(19, 32, kernel_size=(7,), stride=(1,), padding=(3,))\n      (1): ReLU()\n      (2): MaxPool1d(kernel_size=4, stride=4, padding=0, dilation=1, ceil_mode=False)\n    )\n    (1): Sequential(\n      (0): Conv1d(32, 64, kernel_size=(7,), stride=(1,), padding=(3,))\n      (1): ReLU()\n      (2): MaxPool1d(kernel_size=4, stride=4, padding=0, dilation=1, ceil_mode=False)\n    )\n    (2): Sequential(\n      (0): Conv1d(64, 64, kernel_size=(7,), stride=(1,), padding=(3,))\n      (1): ReLU()\n      (2): MaxPool1d(kernel_size=4, stride=4, padding=0, dilation=1, ceil_mode=False)\n    )\n  )\n  (pool): AdaptiveAvgPool1d(output_size=1)\n  (dropout): Dropout(p=0.0, inplace=False)\n  (head): Linear(in_features=64, out_features=1, bias=True)\n)",
     "epochs": 30,
     "batch_size": 64,
-    "learning_rate": 0.001,
     "validation_share": 0.2,
     "cv_folds": 5,
     "cv_repeats": 3,
-    "window_seconds": 4,
     "decision_threshold": 0.5
   },
   "summary": {

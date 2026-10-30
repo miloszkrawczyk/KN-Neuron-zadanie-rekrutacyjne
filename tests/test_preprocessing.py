@@ -187,3 +187,10 @@ def test_loud_subject_is_not_dropped():
     kept, _, _ = drop_artifact_windows(windows, labels, subjects)
 
     assert len(kept) == 10
+
+
+def test_two_second_windows():
+    windows, _, _ = cut_windows(recording("s1", "ADHD", sine(10)), window_seconds=2, step_seconds=1)
+
+    # 26 s left after trimming, a 2 s window every second: (26 - 2) / 1 + 1.
+    assert windows.shape == (25, len(CHANNELS), 2 * SAMPLING_RATE)

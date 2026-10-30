@@ -47,15 +47,15 @@ def filter_recordings(df):
     return filtered
 
 
-def cut_windows(df):
+def cut_windows(df, window_seconds=WINDOW_SECONDS, step_seconds=WINDOW_STEP_SECONDS):
     """Cut each subject's recording into overlapping windows.
 
     Returns three arrays of the same length: the windows, shaped
     (windows, channels, samples), the 0/1 label of each window, and the ID of
     the subject it came from, which the split and subject-level scores need.
     """
-    size = WINDOW_SECONDS * SAMPLING_RATE
-    step = WINDOW_STEP_SECONDS * SAMPLING_RATE
+    size = window_seconds * SAMPLING_RATE
+    step = step_seconds * SAMPLING_RATE
     trim = TRIM_SECONDS * SAMPLING_RATE
 
     windows, labels, subjects = [], [], []

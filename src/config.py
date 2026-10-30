@@ -209,6 +209,28 @@ CNN_LEARNING_RATE: float = 1e-3
 # the best epoch. The fold being scored is never used for that.
 CNN_VALIDATION_SHARE: float = 0.2
 
+# Variants compared on the same 15 splits. The first is the network as
+# trained above. The CNN overfits from the second epoch on, so each other
+# variant tries one remedy: dropout 0.5, the classic value, hides half the
+# pooled features at random while training; 2 s windows give twice as many,
+# shorter examples (stepped by 1 s, still half-overlapping); a ten times
+# smaller learning rate tests whether the best epoch being 1 or 2 just means
+# the network learns too fast to stop at the right moment.
+CNN_VARIANTS: dict = {
+    "4s": {"window_seconds": 4, "dropout": 0.0, "learning_rate": 1e-3},
+    "4s dropout": {"window_seconds": 4, "dropout": 0.5, "learning_rate": 1e-3},
+    "2s": {"window_seconds": 2, "dropout": 0.0, "learning_rate": 1e-3},
+    "2s dropout": {"window_seconds": 2, "dropout": 0.5, "learning_rate": 1e-3},
+    "4s slow": {"window_seconds": 4, "dropout": 0.0, "learning_rate": 1e-4},
+}
+
+# Picked from results/cnn_variants.json by the same rule as the classical
+# models. "2s dropout" had the best mean subject-level balanced accuracy
+# (0.776); plain "4s" trailed it by 0.025, more than its standard error of
+# about 0.015. Both 2 s variants also halved the spread between folds
+# (+/- 0.06 against +/- 0.10), which matters more than the mean.
+CHOSEN_CNN_VARIANT: str = "2s dropout"
+
 
 # *** Evaluation ***
 # Probability from which a window, or a subject, counts as ADHD. Left at the
