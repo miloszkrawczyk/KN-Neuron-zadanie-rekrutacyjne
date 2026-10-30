@@ -113,6 +113,30 @@ FILTER_BAND: tuple = (0.5, 40)
 FILTER_ORDER: int = 4
 
 
+# *** Windows ***
+# Each recording is cut into windows of this length. The same 4 s as the
+# Welch pieces, so a window's spectrum has the same 0.25 Hz resolution as
+# the EDA. Shorter windows would leave too few points across theta.
+WINDOW_SECONDS: int = 4
+
+# A new window every 2 s, so neighbours overlap by half. That doubles the
+# number of windows, and an event cut in two at one boundary still lands
+# whole in the window that straddles it.
+WINDOW_STEP_SECONDS: int = 2
+
+# Skipped at both ends of every recording. After filtering, the first and
+# last 2 s spread 1.3x as wide as the middle for the median subject and 2.4
+# to 3.8x for one subject in ten: part filter edge, part a child settling in.
+TRIM_SECONDS: int = 2
+
+# A window is dropped as an artifact when its peak is over this many times
+# the median peak of the same subject's windows. Relative, because the
+# recordings differ in overall loudness: a fixed cut-off of 1000 would drop
+# about half of all windows. At 3x it drops 2.5% of ADHD windows and 2.3% of
+# control windows, so it cleans without tilting the classes.
+ARTIFACT_FACTOR: float = 3.0
+
+
 # *** Reproducibility ***
 # One seed for numpy, scikit-learn and PyTorch. Without it every run would
 # draw a different split and different starting weights, and two results

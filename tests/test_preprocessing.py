@@ -1,9 +1,11 @@
-"""Tests for the band-pass filter, on made-up signals whose answer is known.
+"""Tests for filtering, windowing and artifact rejection, on made-up signals
+whose answer is known.
 
 A pure sine wave at one frequency is the easiest thing to reason about: the
 filter should pass it at full size inside the band and wipe it out outside.
 Only the middle of each signal is checked, away from the edges, where any
-filter has less context to work with.
+filter has less context to work with. Constant signals do the same job for
+windows: a window that is not all one value has picked up another subject.
 """
 
 import numpy as np
@@ -16,11 +18,14 @@ from src.config import (
     SAMPLING_RATE,
     SUBJECT_COLUMN,
     TARGET_COLUMN,
+    TRIM_SECONDS,
+    WINDOW_SECONDS,
 )
-from src.preprocessing import bandpass, filter_recordings
+from src.preprocessing import bandpass, cut_windows, drop_artifact_windows, filter_recordings
 
 SECONDS = 30
 AMPLITUDE = 100.0
+WINDOW = WINDOW_SECONDS * SAMPLING_RATE
 
 
 def sine(frequency, seconds=SECONDS):
@@ -105,3 +110,80 @@ def test_filtering_keeps_rows_and_labels():
         assert filtered[column].equals(df[column])
     # The input is left untouched, so the raw signal stays available.
     assert df.equals(before)
+
+
+def test_window_count_matches_trimmed_length():
+    windows, _, _ = cut_windows(recording("s1", "ADHD", sine(10)))
+
+    # 30 s minus 2 s at each end leaves 26 s, and a 4 s window every 2 s
+    # fits (26 - 4) / 2 + 1 = 12 times.
+    assert len(windows) == 12
+
+
+def test_windows_have_channels_first_shape():
+    windows, labels, subjects = cut_windows(recording("s1", "ADHD", sine(10)))
+
+    assert windows.shape == (12, len(CHANNELS), WINDOW)
+    assert windows.dtype == "float32"
+    assert len(labels) == len(subjects) == 12
+
+
+def test_window_never_mixes_two_subjects():
+    samples = SECONDS * SAMPLING_RATE
+    df = pd.concat(
+        [
+            recording("s1", "ADHD", np.ones(samples)),
+            recording("s2", "Control", np.full(samples, 2.0)),
+        ],
+        ignore_index=True,
+    )
+
+    windows, labels, subjects = cut_windows(df)
+
+    for window, label, subject in zip(windows, labels, subjects, strict=True):
+        expected_value, expected_label = (1.0, 1) if subject == "s1" else (2.0, 0)
+        assert (window == expected_value).all()
+        assert label == expected_label
+
+
+def test_edges_are_trimmed():
+    values = np.zeros(SECONDS * SAMPLING_RATE)
+    edge = TRIM_SECONDS * SAMPLING_RATE
+    values[:edge] = 999
+    values[-edge:] = 999
+
+    windows, _, _ = cut_windows(recording("s1", "ADHD", values))
+
+    assert windows.max() < 999
+
+
+def test_windows_overlap_by_half():
+    windows, _, _ = cut_windows(recording("s1", "ADHD", sine(10)))
+
+    half = WINDOW // 2
+    assert np.array_equal(windows[0][:, half:], windows[1][:, :half])
+
+
+def test_spiky_window_is_dropped():
+    windows = np.ones((10, len(CHANNELS), WINDOW), dtype="float32")
+    windows[3, 0, 100] = 50  # one blink-sized spike in one window
+    labels = np.zeros(10, dtype=int)
+    subjects = np.array(["s1"] * 10)
+
+    kept, kept_labels, kept_subjects = drop_artifact_windows(windows, labels, subjects)
+
+    assert len(kept) == len(kept_labels) == len(kept_subjects) == 9
+    assert kept.max() == 1
+
+
+def test_loud_subject_is_not_dropped():
+    # The second subject is ten times louder throughout, which is a property
+    # of the recording, not an artifact. A fixed cut-off would drop it all.
+    windows = np.ones((10, len(CHANNELS), WINDOW), dtype="float32")
+    windows[5:] *= 10
+    labels = np.array([1] * 5 + [0] * 5)
+    subjects = np.array(["s1"] * 5 + ["s2"] * 5)
+
+    kept, _, _ = drop_artifact_windows(windows, labels, subjects)
+
+    assert len(kept) == 10
