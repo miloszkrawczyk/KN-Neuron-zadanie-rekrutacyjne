@@ -4,6 +4,10 @@ Only the 96 training subjects are used. Each repeat deals them into
 CV_FOLDS groups that never split a subject; every group takes one turn as
 the validation set. The held-out test subjects are not loaded at all.
 
+Two comparisons, two files in results/: the three models at their default
+settings (classic_cv.json), then a small hyperparameter grid for the two real
+ones (classic_settings.json).
+
 Run with: uv run python -m src.train_classic
 """
 
@@ -20,7 +24,14 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
 from src import config
-from src.config import CV_FOLDS, CV_REPEATS, RESULTS_DIR, SEED
+from src.config import (
+    CV_FOLDS,
+    CV_REPEATS,
+    FOREST_MIN_SAMPLES_LEAF,
+    LOGISTIC_C_VALUES,
+    RESULTS_DIR,
+    SEED,
+)
 from src.data import load_eeg, subject_table
 from src.evaluate import score, subject_scores
 from src.features import band_features
@@ -47,23 +58,45 @@ def cv_splits(labels, subjects):
     return splits
 
 
+def logistic_regression(c=1.0):
+    """Scaled logistic regression with balanced class weights, untrained."""
+    # Inside a pipeline, the scaler learns its means from the training fold
+    # only, so nothing about the validation fold leaks in.
+    return make_pipeline(
+        StandardScaler(),
+        LogisticRegression(C=c, class_weight="balanced", max_iter=2000),
+    )
+
+
+def random_forest(min_samples_leaf=1):
+    """Random forest of 300 trees with balanced class weights, untrained."""
+    # Trees split on thresholds, so they need no scaling.
+    return RandomForestClassifier(
+        n_estimators=300,
+        min_samples_leaf=min_samples_leaf,
+        class_weight="balanced",
+        n_jobs=-1,
+        random_state=SEED,
+    )
+
+
 def build_models():
-    """The three models compared here, untrained."""
+    """The three models compared here, untrained, at default settings."""
     return {
         # Always answers ADHD, the class with more windows: the floor any
         # real model has to clear.
         "dummy": DummyClassifier(strategy="most_frequent"),
-        # Inside a pipeline, the scaler learns its means from the training
-        # fold only, so nothing about the validation fold leaks in.
-        "logistic_regression": make_pipeline(
-            StandardScaler(),
-            LogisticRegression(class_weight="balanced", max_iter=2000),
-        ),
-        # Trees split on thresholds, so they need no scaling.
-        "random_forest": RandomForestClassifier(
-            n_estimators=300, class_weight="balanced", n_jobs=-1, random_state=SEED
-        ),
+        "logistic_regression": logistic_regression(),
+        "random_forest": random_forest(),
     }
+
+
+def build_settings():
+    """The hyperparameter grid from config, one untrained model per setting."""
+    settings = {f"logistic_regression C={c}": logistic_regression(c) for c in LOGISTIC_C_VALUES}
+    for leaf in FOREST_MIN_SAMPLES_LEAF:
+        settings[f"random_forest leaf={leaf}"] = random_forest(leaf)
+    return settings
 
 
 def cross_validate(model, features, labels, subjects):
@@ -96,9 +129,8 @@ def summarise(folds):
     return summary
 
 
-if __name__ == "__main__":
-    features, labels, subjects = training_data()
-    models = build_models()
+def compare(models, features, labels, subjects, filename):
+    """Cross-validate every model, save the full report to results/ and print a table."""
     results = {
         name: cross_validate(model, features, labels, subjects) for name, model in models.items()
     }
@@ -123,15 +155,21 @@ if __name__ == "__main__":
         "folds": results,
     }
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    with open(RESULTS_DIR / "classic_cv.json", "w") as file:
+    with open(RESULTS_DIR / filename, "w") as file:
         json.dump(report, file, indent=2)
 
     for level in ("subjects", "windows"):
         print(f"\n{level}, mean +/- std over {CV_FOLDS * CV_REPEATS} folds")
         for name, summary in report["summary"].items():
-            line = f"  {name:20}"
+            line = f"  {name:28}"
             for metric in ("balanced_accuracy", "roc_auc", "sensitivity", "specificity"):
                 value = summary[level][metric]
                 line += f"  {metric} {value['mean']:.3f}+/-{value['std']:.3f}"
             print(line)
-    print(f"\nsaved to {RESULTS_DIR / 'classic_cv.json'}")
+    print(f"\nsaved to {RESULTS_DIR / filename}")
+
+
+if __name__ == "__main__":
+    features, labels, subjects = training_data()
+    compare(build_models(), features, labels, subjects, "classic_cv.json")
+    compare(build_settings(), features, labels, subjects, "classic_settings.json")

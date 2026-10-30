@@ -166,6 +166,24 @@ CV_FOLDS: int = 5
 CV_REPEATS: int = 3
 
 
+# *** Hyperparameters ***
+# A deliberately small grid: with scores spread +/- 0.10 between folds, the
+# best of many settings would partly be the luckiest one.
+#
+# Logistic regression: C is the inverse strength of the penalty on large
+# weights. 1.0 is scikit-learn's default; smaller values make the model
+# trust no single feature much, which tends to help with 95 features and
+# only 96 subjects.
+LOGISTIC_C_VALUES: tuple = (0.01, 0.1, 1.0)
+
+# Random forest: the fewest windows a leaf may hold. 1 is the default and
+# lets a tree memorise single windows; 20 is about a third of a typical
+# subject's windows, 100 about one and a half subjects. Larger leaves also
+# give less extreme probabilities, which may ease the forest's lean towards
+# ADHD seen in cross-validation.
+FOREST_MIN_SAMPLES_LEAF: tuple = (1, 20, 100)
+
+
 # *** Evaluation ***
 # Probability from which a window, or a subject, counts as ADHD. Left at the
 # middle: the models are trained with class weights, and here a missed ADHD
