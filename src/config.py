@@ -191,6 +191,25 @@ CHOSEN_LOGISTIC_C: float = 0.01
 CHOSEN_FOREST_LEAF: int = 100
 
 
+# *** CNN training ***
+# An epoch takes about 0.2 s on the Mac's graphics chip, and the weights kept
+# are those of the epoch with the lowest validation loss, not the last one.
+# Going past the best epoch costs only time.
+CNN_EPOCHS: int = 30
+
+# Windows per weight update. Small enough to fit easily in memory, large
+# enough that one odd window cannot drag an update off course.
+CNN_BATCH_SIZE: int = 64
+
+# Adam's own default. The network starts from random weights, so the first
+# steps have a long way to travel.
+CNN_LEARNING_RATE: float = 1e-3
+
+# Share of the training folds' subjects set aside, again by subject, to pick
+# the best epoch. The fold being scored is never used for that.
+CNN_VALIDATION_SHARE: float = 0.2
+
+
 # *** Evaluation ***
 # Probability from which a window, or a subject, counts as ADHD. Left at the
 # middle: the models are trained with class weights, and here a missed ADHD
