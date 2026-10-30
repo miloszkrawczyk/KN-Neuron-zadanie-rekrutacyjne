@@ -183,6 +183,13 @@ LOGISTIC_C_VALUES: tuple = (0.01, 0.1, 1.0)
 # ADHD seen in cross-validation.
 FOREST_MIN_SAMPLES_LEAF: tuple = (1, 20, 100)
 
+# Picked from results/classic_settings.json by a rule set before looking:
+# the best mean subject-level balanced accuracy, unless a more cautious
+# setting trails it by less than one standard error (about 0.03). C=0.01 was
+# best outright (0.718); leaf=100 trailed leaf=1 by 0.007 (0.733 vs 0.740).
+CHOSEN_LOGISTIC_C: float = 0.01
+CHOSEN_FOREST_LEAF: int = 100
+
 
 # *** Evaluation ***
 # Probability from which a window, or a subject, counts as ADHD. Left at the
