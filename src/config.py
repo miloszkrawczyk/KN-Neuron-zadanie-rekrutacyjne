@@ -100,6 +100,19 @@ WELCH_SECONDS: int = 4
 TOTAL_POWER_RANGE: tuple = (0.5, 40)
 
 
+# *** Filtering ***
+# Passes 0.5 to 40 Hz, which keeps all four bands above. The lower edge
+# removes the constant offset of about +135 and slow electrode drift; the
+# upper edge removes the 50 Hz mains line, stronger in the control group, and
+# a smaller line at 56 Hz present in both.
+FILTER_BAND: tuple = (0.5, 40)
+
+# A 4th-order Butterworth: flat inside the band, so the waves it keeps come
+# out at their original size. Run forwards and backwards by sosfiltfilt, it
+# cuts 50 Hz to 0.6% of its amplitude (-44 dB).
+FILTER_ORDER: int = 4
+
+
 # *** Reproducibility ***
 # One seed for numpy, scikit-learn and PyTorch. Without it every run would
 # draw a different split and different starting weights, and two results
