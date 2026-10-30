@@ -154,6 +154,18 @@ FEATURE_WELCH_SECONDS: int = 2
 TEST_SIZE: float = 0.2
 
 
+# *** Cross-validation ***
+# Training subjects are dealt into this many groups; each takes one turn as
+# the validation set. Five leaves about 19 subjects per validation group; ten
+# would leave about 10, where one subject moves the score by 10 points.
+CV_FOLDS: int = 5
+
+# The whole cross-validation is repeated with a different shuffle each time
+# (seeds SEED, SEED + 1, ...). Scores varied by +/- 0.10 between folds, so
+# one deal of the groups is too much luck to compare settings on.
+CV_REPEATS: int = 3
+
+
 # *** Evaluation ***
 # Probability from which a window, or a subject, counts as ADHD. Left at the
 # middle: the models are trained with class weights, and here a missed ADHD
