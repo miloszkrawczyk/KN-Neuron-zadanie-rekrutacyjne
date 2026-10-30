@@ -154,6 +154,14 @@ FEATURE_WELCH_SECONDS: int = 2
 TEST_SIZE: float = 0.2
 
 
+# *** Evaluation ***
+# Probability from which a window, or a subject, counts as ADHD. Left at the
+# middle: the models are trained with class weights, and here a missed ADHD
+# and a false alarm cost about the same, unlike a missed melanoma. Tuning it
+# on 96 subjects would mostly fit the threshold to chance.
+DECISION_THRESHOLD: float = 0.5
+
+
 # *** Reproducibility ***
 # One seed for numpy, scikit-learn and PyTorch. Without it every run would
 # draw a different split and different starting weights, and two results
