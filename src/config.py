@@ -137,6 +137,14 @@ TRIM_SECONDS: int = 2
 ARTIFACT_FACTOR: float = 3.0
 
 
+# *** Splitting ***
+# Share of subjects held out for the final test: 25 of 121 (13 ADHD, 12
+# control), leaving 96 to train and cross-validate on. One subject in a test
+# set this small moves accuracy by 4 percentage points, so every choice is
+# made on cross-validation and the test set is scored once, at the very end.
+TEST_SIZE: float = 0.2
+
+
 # *** Reproducibility ***
 # One seed for numpy, scikit-learn and PyTorch. Without it every run would
 # draw a different split and different starting weights, and two results
